@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+models/*.joblib
+artifacts/*.json
+data/*.csv
+!data/.gitkeep
+.DS_Store
