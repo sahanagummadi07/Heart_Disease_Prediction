@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- If you open the UI from Live Server / another port, set this to your API, e.g. http://127.0.0.1:8000 -->
+    <meta name="api-base" content="" />
+    <title>Heart Disease Risk — Clinical Pre-screening</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="page-bg" aria-hidden="true">
+      <div class="page-bg__grid"></div>
+      <div class="page-bg__orb page-bg__orb--a"></div>
+      <div class="page-bg__orb page-bg__orb--b"></div>
+      <div class="page-bg__orb page-bg__orb--c"></div>
+    </div>
+
+    <div class="layout">
+      <div class="topbar" data-reveal>
+        <div class="topbar__left">
+          <span class="topbar__logo" aria-hidden="true"></span>
+          <span class="topbar__brand">Heart Risk <strong>ML</strong></span>
+        </div>
+        <div class="topbar__right">
+          <span class="topbar__pill" id="api-pill" title="Browser → API connection">
+            <span class="topbar__dot" aria-hidden="true"></span>
+            <span class="topbar__pill-text">Checking API…</span>
+          </span>
+        </div>
+      </div>
+
+      <header class="hero">
+        <div class="hero__inner">
+          <div class="hero__copy">
+            <p class="eyebrow">Machine learning classification</p>
+            <h1>Heart disease risk assessment</h1>
+            <p class="lede">
+              Enter anonymized clinical parameters to obtain a model-based probability score. This
+              interface is for demonstration and research workflows only; it does not replace clinical
+              judgment or diagnostic testing.
+            </p>
+          </div>
+          <div class="hero__viz" aria-hidden="true">
+            <div class="viz-card">
+              <span class="viz-card__label">Model signal</span>
+              <div class="ecg-bars">
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="grid main-grid">
+        <section class="card card--lift form-card" data-reveal>
+          <h2>Patient parameters</h2>
+          <form id="predict-form">
+            <div class="field-row">
+              <label>Model</label>
+              <select name="model" id="model">
+                <option value="random_forest">Random Forest</option>
+                <option value="logistic_regression">Logistic Regression</option>
+                <option value="decision_tree">Decision Tree</option>
+                <option value="neural_network">Neural Network (MLP)</option>
+              </select>
+            </div>
+            <div class="fields fields-grid" id="fields"></div>
+            <button type="submit" class="primary">
+              <span class="primary__shine" aria-hidden="true"></span>
+              <span class="primary__text">Run prediction</span>
+            </button>
+            <p id="form-error" class="error" role="alert"></p>
+          </form>
+        </section>
+
+        <section class="card card--lift result-card" data-reveal>
+          <h2>Model output</h2>
+          <div id="result-empty" class="muted result-placeholder">
+            Submit the form to see predicted class (0 = no disease, 1 = disease) and estimated
+            probability for the positive class.
+          </div>
+          <div id="result" class="hidden result-panel">
+            <div class="result-stats">
+              <div class="stat stat-tile">
+                <span class="label">Prediction</span>
+                <span class="value value--pop" id="out-pred"></span>
+              </div>
+              <div class="stat stat-tile">
+                <span class="label">P(heart disease)</span>
+                <span class="value value--pop" id="out-prob"></span>
+              </div>
+            </div>
+            <p class="message" id="out-msg"></p>
+          </div>
+        </section>
+
+        <section class="card card--lift wide metrics-card" data-reveal>
+          <h2>Hold-out metrics (training run)</h2>
+          <p class="muted small">
+            Accuracy, precision, recall, F1, and ROC-AUC are computed on the test split when you run
+            <code>scripts/train_models.py</code>.
+          </p>
+          <div class="table-wrap">
+            <table id="metrics-table">
+              <thead>
+                <tr>
+                  <th>Model</th>
+                  <th>Accuracy</th>
+                  <th>Precision</th>
+                  <th>Recall</th>
+                  <th>F1</th>
+                  <th>ROC-AUC</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="card card--lift wide fi-card" data-reveal>
+          <h2>Feature importance</h2>
+          <p class="muted small">
+            Tree-based models report impurity-based importance; logistic regression uses absolute
+            coefficients on scaled features.
+          </p>
+          <div id="fi-tabs" class="tabs"></div>
+          <div id="fi-content" class="fi-grid"></div>
+        </section>
+      </main>
+
+      <footer class="footer muted small" data-reveal>
+        Dataset: instructor-provided Google Drive file (with automatic fallbacks in
+        <code>scripts/fetch_data.py</code>). Stack: FastAPI backend, Python middleware (validation,
+        preprocessing, model service), static HTML/CSS/JS frontend.
+      </footer>
+    </div>
+    <script src="app.js" type="module"></script>
+  </body>
+</html>
